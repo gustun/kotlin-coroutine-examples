@@ -10,7 +10,3 @@ This is a Spring Boot Application developed in Kotlin to demonstrate how kotlin 
 - https://www.youtube.com/watch?v=aG4ArTL8KHY
 - https://hantsy.medium.com/using-kotlin-coroutines-with-spring-d2784a300bda
 - https://www.baeldung.com/kotlin/spring-boot-kotlin-coroutines
-
-### Todos:
-- CoroutineRepository example
-- CoroutineWebClient example
