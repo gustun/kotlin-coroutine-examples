@@ -1,4 +1,4 @@
-package com.gustun.kotlincoroutinesdemo.service
+package com.gustun.kotlincoroutinesdemo.client
 
 import com.gustun.kotlincoroutinesdemo.model.UserDetail
 import com.gustun.kotlincoroutinesdemo.model.UserImage
@@ -7,27 +7,26 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import org.springframework.http.MediaType
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import org.springframework.util.StopWatch
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
-import org.springframework.web.reactive.function.client.awaitExchange
 import org.springframework.web.reactive.function.client.bodyToFlow
 
-@Service
-class WebClientService(private val client: WebClient) {
+@Component
+class UserApiClient (private val userApiWebClient: WebClient) {
     suspend fun withDetails(id: Int): UserDetail {
         val stopWatch = StopWatch()
         stopWatch.start()
         val userModel =
-            client.get().uri("/users/$id")
+            userApiWebClient.get().uri("/users/$id")
                 .accept(MediaType.APPLICATION_JSON)
-                .awaitExchange().awaitBody<UserModel>()
+                .retrieve().awaitBody<UserModel>()
 
         val userImage =
-            client.get().uri("/images/$id/")
+            userApiWebClient.get().uri("/images/$id/")
                 .accept(MediaType.APPLICATION_JSON)
-                .awaitExchange().awaitBody<UserImage>()
+                .retrieve().awaitBody<UserImage>()
 
         stopWatch.stop()
         println(stopWatch.totalTimeMillis)
@@ -38,15 +37,15 @@ class WebClientService(private val client: WebClient) {
         val stopWatch = StopWatch()
         stopWatch.start()
         val userModel = async {
-            client.get().uri("/users/$id")
+            userApiWebClient.get().uri("/users/$id")
                 .accept(MediaType.APPLICATION_JSON)
-                .awaitExchange().awaitBody<UserModel>()
+                .retrieve().awaitBody<UserModel>()
         }
 
         val userImage = async {
-            client.get().uri("/images/$id/")
+            userApiWebClient.get().uri("/images/$id/")
                 .accept(MediaType.APPLICATION_JSON)
-                .awaitExchange().awaitBody<UserImage>()
+                .retrieve().awaitBody<UserImage>()
         }
 
         val userDetail = UserDetail(userModel.await(), userImage.await())
@@ -56,10 +55,10 @@ class WebClientService(private val client: WebClient) {
     }
 
     suspend fun findAll(): Flow<UserModel> {
-        return client.get()
+        return userApiWebClient.get()
             .uri("/users")
             .accept(MediaType.APPLICATION_JSON)
-            .awaitExchange()
+            .retrieve()
             .bodyToFlow()
     }
 }
