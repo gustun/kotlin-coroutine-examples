@@ -34,13 +34,13 @@ class TestBean {
     }
 
     suspend fun operation1(): Int {
-        delay(4000L) // simulated computation
+        delay(700L) // simulated computation
         println("[${(SimpleDateFormat("hh:mm:ss")).format(Date())}] operation1 finished")
         return 50
     }
 
     suspend fun operation2(): Int {
-        delay(2000L)
+        delay(400L)
         println("[${(SimpleDateFormat("hh:mm:ss")).format(Date())}] operation2 finished")
         return 60
     }
