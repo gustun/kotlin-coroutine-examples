@@ -18,6 +18,7 @@ class TestBean {
             var stopWatch = StopWatch()
             stopWatch.start()
 
+            // log thread names and use dispatcher.io while opening runBlocking scope
             val deferred1 = async { operation1() }
             val deferred2 = async { operation2() }
             val result = deferred1.await() + deferred2.await()
